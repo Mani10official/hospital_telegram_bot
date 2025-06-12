@@ -383,12 +383,16 @@ def command_sign_up(message):
             send_message(cid, 'شما قبلا ثبت نام کردید 👍 \nتذکر: پاک کردن اطلاعات باعث حذف نوبت ها به صورت خودکار هم میشود 🆘', reply_markup=markup)
             user_resignup[cid] = 'resignup'
         else:
+            markup = ReplyKeyboardMarkup(resize_keyboard=True)
+            markup.add('بازگشت به منوی اصلی 🔙')
             user_data.setdefault(cid, dict())
-            send_message(cid, 'لطفا نام خود را وارد کنید', reply_markup=hideboard)
+            send_message(cid, 'لطفا نام خود را وارد کنید', reply_markup=markup)
             user_step[cid] = 'su_fn'
     except Exception as e:
+        markup = ReplyKeyboardMarkup(resize_keyboard=True)
+        markup.add('بازگشت به منوی اصلی 🔙')
         user_data.setdefault(cid, dict())
-        send_message(cid, 'لطفا نام خود را وارد کنید', reply_markup=hideboard)
+        send_message(cid, 'لطفا نام خود را وارد کنید', reply_markup=markup)
         user_step[cid] = 'su_fn'
         
         
@@ -411,45 +415,80 @@ def step_su_fn(message):
     cid = message.chat.id
     if is_spam(cid): return
     first_name = message.text
-    user_data[cid].setdefault('first_name', first_name)
-    send_message(cid, 'لطفا نام خانوادگی خود را وارد کنید')
-    user_step[cid] = 'su_ln'
-    
+    markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add('بازگشت به منوی اصلی 🔙')
+    if first_name == 'بازگشت به منوی اصلی 🔙': 
+        user_data[cid] = dict()
+        user_step[cid] = dict()
+        button_backToMainMenu(message)
+    else:
+        user_data[cid].setdefault('first_name', first_name)
+        send_message(cid, 'لطفا نام خانوادگی خود را وارد کنید', reply_markup=markup)
+        user_step[cid] = 'su_ln'
+        
 @bot.message_handler(func=lambda  message: user_step.get(message.chat.id) == 'su_ln')
 def step_su_ln(message):
     cid = message.chat.id
     if is_spam(cid): return
     last_name = message.text
-    user_data[cid].setdefault('last_name', last_name)
-    send_message(cid, 'لطفا سال تولد خود را وارد کنید')
-    user_step[cid] = 'su_by'
+    markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add('بازگشت به منوی اصلی 🔙')
+    if last_name == 'بازگشت به منوی اصلی 🔙': 
+        user_data[cid] = dict()
+        user_step[cid] = dict()
+        button_backToMainMenu(message)
+    else:
+        user_data[cid].setdefault('last_name', last_name)
+        send_message(cid, 'لطفا سال تولد خود را وارد کنید', reply_markup=markup)
+        user_step[cid] = 'su_by'
     
 @bot.message_handler(func=lambda  message: user_step.get(message.chat.id) == 'su_by')
 def step_su_by(message):
     cid = message.chat.id
     if is_spam(cid): return
     birth_year = message.text
-    user_data[cid].setdefault('birth_year', birth_year)
-    send_message(cid, 'لطفا کد ملی خود را وارد کنید')
-    user_step[cid] = 'su_nc'
-    
+    markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add('بازگشت به منوی اصلی 🔙')
+    if birth_year == 'بازگشت به منوی اصلی 🔙': 
+        user_data[cid] = dict()
+        user_step[cid] = dict()
+        button_backToMainMenu(message)
+    else:
+        user_data[cid].setdefault('birth_year', birth_year)
+        send_message(cid, 'لطفا کد ملی خود را وارد کنید', reply_markup=markup)
+        user_step[cid] = 'su_nc'
+        
 @bot.message_handler(func=lambda  message: user_step.get(message.chat.id) == 'su_nc')
 def step_su_nc(message):
     cid = message.chat.id
     if is_spam(cid): return
     national_code = message.text
-    user_data[cid].setdefault('national_code', national_code)
-    send_message(cid, 'لطفا آدرس خود را وارد کنید')
-    user_step[cid] = 'su_address'
+    markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add('بازگشت به منوی اصلی 🔙')
+    if national_code == 'بازگشت به منوی اصلی 🔙': 
+        user_data[cid] = dict()
+        user_step[cid] = dict()
+        button_backToMainMenu(message)
+    else:
+        user_data[cid].setdefault('national_code', national_code)
+        send_message(cid, 'لطفا آدرس خود را وارد کنید', reply_markup=markup)
+        user_step[cid] = 'su_address'
     
 @bot.message_handler(func=lambda  message: user_step.get(message.chat.id) == 'su_address')
 def step_su_address(message):
     cid = message.chat.id
     if is_spam(cid): return
     address = message.text
-    user_data[cid].setdefault('address', address)
-    send_message(cid, 'لطفا شماره موبایل خود را وارد کنید')
-    user_step[cid] = 'su_phone'
+    markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add('بازگشت به منوی اصلی 🔙')
+    if address == 'بازگشت به منوی اصلی 🔙': 
+        user_data[cid] = dict()
+        user_step[cid] = dict()
+        button_backToMainMenu(message)
+    else:
+        user_data[cid].setdefault('address', address)
+        send_message(cid, 'لطفا شماره موبایل خود را وارد کنید', reply_markup=markup)
+        user_step[cid] = 'su_phone'
 
 @bot.message_handler(func=lambda  message: user_step.get(message.chat.id) == 'su_phone')
 def step_su_phone(message):
@@ -457,20 +496,25 @@ def step_su_phone(message):
     if is_spam(cid): return
     global user_data
     phone = message.text
-    info = bot.get_chat(cid)
-    send_message(cid, 'سپاس اطلاعات شما با موفقیت ثبت شد')
-    first_name = user_data[cid]['first_name']
-    last_name = user_data[cid]['last_name']
-    birth_year = str(user_data[cid]['birth_year'])
-    national_code = str(user_data[cid]['national_code'])
-    address = user_data[cid]['address']
-    username = info.username
-    phone = str(phone)
-    description = None
-    DML.insert_patient_data(cid, first_name, last_name, birth_year, national_code, address, username, phone, description)
-    user_data[cid] = dict()
-    user_step[cid] = dict()
-    button_backToMainMenu(message)
+    if phone == 'بازگشت به منوی اصلی 🔙': 
+        user_data[cid] = dict()
+        user_step[cid] = dict()
+        button_backToMainMenu(message)
+    else:
+        info = bot.get_chat(cid)
+        send_message(cid, 'سپاس اطلاعات شما با موفقیت ثبت شد')
+        first_name = user_data[cid]['first_name']
+        last_name = user_data[cid]['last_name']
+        birth_year = str(user_data[cid]['birth_year'])
+        national_code = str(user_data[cid]['national_code'])
+        address = user_data[cid]['address']
+        username = info.username
+        phone = str(phone)
+        description = None
+        DML.insert_patient_data(cid, first_name, last_name, birth_year, national_code, address, username, phone, description)
+        user_data[cid] = dict()
+        user_step[cid] = dict()
+        button_backToMainMenu(message)
     
 
     # appointment
@@ -551,6 +595,7 @@ def command_rate(message):
     cid = message.chat.id
     if is_spam(cid): return
     markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add('بازگشت به منوی اصلی 🔙')
     docs = DQL.get_doctor_name()
     for i in docs:
         if i['gender'] == 'مرد':
@@ -566,18 +611,30 @@ def command_rate(message):
 def step_select_doc(message):
     cid = message.chat.id
     if is_spam(cid): return
-    send_message(cid, 'لطفا امتیاز خود را بین 1 تا 5 وارد کنید', reply_markup=hideboard)
-    user_step[cid] = 'rate'
+    if message.text == 'بازگشت به منوی اصلی 🔙':
+        user_step[cid] = dict() 
+        user_rate[cid] = dict()       
+        button_backToMainMenu(message)
+    else:
+        markup = ReplyKeyboardMarkup(resize_keyboard=True)
+        markup.add('بازگشت به منوی اصلی 🔙')
+        send_message(cid, 'لطفا امتیاز خود را بین 1 تا 5 وارد کنید', reply_markup=markup)
+        user_step[cid] = 'rate'
 
 @bot.message_handler(func=lambda  message: user_step.get(message.chat.id) == 'rate')
 def step_rate(message):
     cid = message.chat.id
     if is_spam(cid): return
     rate = message.text
-    send_message(cid, 'ممنون امتیاز شما ثبت شد')
-    DML.insert_rate_data(cid, rate)
-    user_step[cid] = dict()
-    button_backToMainMenu(message)
+    if rate == 'بازگشت به منوی اصلی 🔙':
+        user_step[cid] = dict() 
+        user_rate[cid] = dict()       
+        button_backToMainMenu(message)
+    else:
+        send_message(cid, 'ممنون امتیاز شما ثبت شد')
+        DML.insert_rate_data(cid, rate)
+        user_step[cid] = dict()
+        button_backToMainMenu(message)
     
     
     # comments
@@ -585,7 +642,9 @@ def step_rate(message):
 def command_comments(message):
     cid = message.chat.id
     if is_spam(cid): return
-    send_message(cid, 'لطفا نظرات خود را وارد کنید', reply_markup=hideboard)
+    markup = ReplyKeyboardMarkup(resize_keyboard=True)
+    markup.add('بازگشت به منوی اصلی 🔙')
+    send_message(cid, 'لطفا نظرات خود را وارد کنید', reply_markup=markup)
     user_step[cid] = 'comments'
     
 @bot.message_handler(func=lambda  message: user_step.get(message.chat.id) == 'comments')
@@ -593,10 +652,14 @@ def step_comments(message):
     cid = message.chat.id
     if is_spam(cid): return
     comments = message.text
-    send_message(cid, 'ممنون نظر شما ثبت شد')
-    DML.insert_comments_data(cid, comments)
-    user_step[cid] = dict()
-    button_backToMainMenu(message)
+    if comments == 'بازگشت به منوی اصلی 🔙':
+        user_step[cid] = dict()        
+        button_backToMainMenu(message)
+    else:
+        send_message(cid, 'ممنون نظر شما ثبت شد')
+        DML.insert_comments_data(cid, comments)
+        user_step[cid] = dict()
+        button_backToMainMenu(message)
     
 
     # admin commands
