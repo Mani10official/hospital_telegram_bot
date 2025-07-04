@@ -302,6 +302,7 @@ def command_doctors_list(message):
         elif i['gender'] == 'زن':
             f = f'خانم دکتر {i["name"]} 👩‍⚕️'
             markup.add(f)
+    markup.add('بازگشت به منوی اصلی 🔙')
     send_message(cid, 'لیست پزشکان :', reply_markup=markup)
     user_step[cid] = 'select_doc_from_list'
 
@@ -312,10 +313,14 @@ def step_select_doc_from_list(message):
     markup = ReplyKeyboardMarkup(resize_keyboard=True)
     markup.add('بازگشت به منوی اصلی 🔙')
     name = message.text
-    raw_name = name.split()[2] + ' ' + name.split()[3]
-    disc = DQL.get_doctor_description(raw_name)
-    send_message(cid, f'{name}  : \n{disc[0]["description"]}', reply_markup=markup) 
-    user_step[cid] = dict()   
+    if name == 'بازگشت به منوی اصلی 🔙':
+        user_step[cid] = dict()
+        button_backToMainMenu(message)
+    else:
+        raw_name = name.split()[2] + ' ' + name.split()[3]
+        disc = DQL.get_doctor_description(raw_name)
+        send_message(cid, f'{name}  : \n{disc[0]["description"]}', reply_markup=markup) 
+        user_step[cid] = dict()   
 
 
     # guide
@@ -574,7 +579,6 @@ def step_input_tracking_code(message):
         else:
             appointment_data = DQL.get_appointment_data(tracking_code)
             doctor_ID = appointment_data['doctor_ID']
-            status = appointment_data['status']
             date = appointment_data['date']
             hour_ID = appointment_data['Hour_ID']
             patient_data = DQL.get_patient_data(cid)
@@ -595,13 +599,13 @@ def command_rate(message):
     cid = message.chat.id
     if is_spam(cid): return
     markup = ReplyKeyboardMarkup(resize_keyboard=True)
-    markup.add('بازگشت به منوی اصلی 🔙')
     docs = DQL.get_doctor_name()
     for i in docs:
         if i['gender'] == 'مرد':
             markup.add(f'آقای دکتر {i["name"]} 👨‍⚕️')
         elif i['gender'] == 'زن':
             markup.add(f'خانم دکتر {i["name"]} 👩‍⚕️')
+    markup.add('بازگشت به منوی اصلی 🔙')
     send_message(cid, 'لطفا پزشک مورد نظر را انتخاب کنید', reply_markup=markup)
     user_step[cid] = 'select_doc'
     user_rate.setdefault(cid, dict())
